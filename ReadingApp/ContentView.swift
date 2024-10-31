@@ -23,14 +23,48 @@ struct ContentView: View {
                         BookView(book: book)
                     } label: {
                         VStack {
-                            Text(book.title)
-                                .fontWeight(.bold)
-                                .font(.title)
-                            Text(book.author.name + " " + book.author.surname)
-                                .font(.caption)
                             HStack {
-                                let progressValue = Double(book.currentPage)
-                                let totalPages = Double(book.numPages)
+                                VStack {
+                                    Text(book.title)
+                                        .fontWeight(.bold)
+                                        .font(.title)
+                                    Text(book.author.name + " " + book.author.surname)
+                                        .font(.caption)
+                                        .padding(.bottom)
+                                }
+                                Button(action: editBook) {
+                                    Image(systemName: "pencil.circle")
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                            
+                            if (book.currentPage == 1) {
+                                HStack {
+                                    Image(systemName: "book.closed.circle.fill")
+                                        .foregroundStyle(.gray)
+                                    Text("Not Started")
+                                    Spacer()
+                                }
+                            }
+                            else if (book.currentPage == book.numPages) {
+                                HStack {
+                                    Image(systemName: "books.vertical.circle.fill")
+                                        .foregroundStyle(.green)
+                                    Text("Completed")
+                                    Spacer()
+                                }
+                            }
+                            else {
+                                HStack {
+                                    Image(systemName: "book.circle.fill")
+                                        .foregroundStyle(.blue)
+                                    Text("In Progress")
+                                    Spacer()
+                                }
+                            }
+                            HStack {
+                                let progressValue = Double(book.getStatus())
+                                let totalPages = Double(100)
                                 
                                 ProgressView(String(book.getStatus()) + "%", value: progressValue, total: totalPages)
                                     .progressViewStyle(LinearProgressViewStyle())
@@ -86,6 +120,10 @@ struct ContentView: View {
 
     private func addBook() {
         addBookPopUp.toggle()
+    }
+    
+    private func editBook() {
+        
     }
 
     private func deleteItems(offsets: IndexSet) {

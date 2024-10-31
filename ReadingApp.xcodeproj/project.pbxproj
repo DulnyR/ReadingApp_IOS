@@ -18,6 +18,7 @@
 		FB1F8D672CCBA19100FFE537 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1F8D662CCBA19100FFE537 /* Author.swift */; };
 		FB1F8D692CCBA4C400FFE537 /* AddBookPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1F8D682CCBA4C400FFE537 /* AddBookPopUpView.swift */; };
 		FB1F8D6B2CCBBA2C00FFE537 /* BookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1F8D6A2CCBBA2C00FFE537 /* BookView.swift */; };
+		FB604C132CD3CDA500D19CB0 /* EditBookPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB604C122CD3CDA500D19CB0 /* EditBookPopUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		FB1F8D662CCBA19100FFE537 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		FB1F8D682CCBA4C400FFE537 /* AddBookPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookPopUpView.swift; sourceTree = "<group>"; };
 		FB1F8D6A2CCBBA2C00FFE537 /* BookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookView.swift; sourceTree = "<group>"; };
+		FB604C122CD3CDA500D19CB0 /* EditBookPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBookPopUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				FB1F8D3A2CCB9F4000FFE537 /* ContentView.swift */,
 				FB1F8D6A2CCBBA2C00FFE537 /* BookView.swift */,
 				FB1F8D682CCBA4C400FFE537 /* AddBookPopUpView.swift */,
+				FB604C122CD3CDA500D19CB0 /* EditBookPopUpView.swift */,
 				FB1F8D3C2CCB9F4000FFE537 /* Book.swift */,
 				FB1F8D662CCBA19100FFE537 /* Author.swift */,
 				FB1F8D3E2CCB9F4100FFE537 /* Assets.xcassets */,
@@ -275,6 +278,7 @@
 				FB1F8D6B2CCBBA2C00FFE537 /* BookView.swift in Sources */,
 				FB1F8D392CCB9F4000FFE537 /* ReadingAppApp.swift in Sources */,
 				FB1F8D692CCBA4C400FFE537 /* AddBookPopUpView.swift in Sources */,
+				FB604C132CD3CDA500D19CB0 /* EditBookPopUpView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

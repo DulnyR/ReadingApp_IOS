@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Book {
+final class Book: ObservableObject {
     var title: String
     var pubYear: Int
     var numPages: Int
@@ -27,7 +27,7 @@ final class Book {
     }
     
     func getStatus() -> Int {
-        return (currentPage / numPages) * 100
+        return currentPage < numPages ? Int((Double(currentPage - 1) * 100) / Double(numPages)) : 100
     }
     
     func updatePage(page: Int) {
@@ -36,6 +36,10 @@ final class Book {
     
     func getTimeLeft(readingSpeed: Double) -> String {
         let pagesLeft = numPages - currentPage
+        
+        if pagesLeft ==  0 {
+            return "Finished"
+        }
         let timeLeft = Int(Double(pagesLeft) / readingSpeed)
         let hours = timeLeft / 60
         let minutes = timeLeft % 60
@@ -44,9 +48,5 @@ final class Book {
             return "\(hours)h \(minutes)m left"
         }
         return "\(timeLeft)m left"
-    }
-    
-    func getPageContent() -> String {
-        return "Welcome to page \(String(currentPage)) of \(title) by \(author.name) \(author.surname) !"
     }
 }

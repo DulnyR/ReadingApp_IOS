@@ -8,39 +8,78 @@
 import SwiftUI
 
 struct BookView: View {
-    var book: Book
+    @ObservedObject var book: Book
+    @State var currentPage: Int
+    
+    init(book: Book) {
+        self.book = book
+        self.currentPage = book.currentPage
+    }
     
     var body: some View {
         VStack {
-            Text(book.getPageContent())
+            
+            Spacer()
+            
+            Text("This is page \(currentPage) of \(book.title) by \(book.author.name) \(book.author.surname).")
                 .padding()
+                .multilineTextAlignment(.center)
+            
+            Spacer()
             
             HStack {
                 Button(action: previousPage) {
-                    Text("Previous")
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Prev")
+                    }
+                    .font(.subheadline)
                 }
-                .disabled(book.currentPage <= 1) // Disable if on the first page
+                .disabled(currentPage <= 1)
+                .buttonStyle(PlainButtonStyle())
+                .padding()
+                .background(currentPage > 1 ? Color.blue : Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Spacer()
+                Text("\(currentPage) / \(book.numPages)")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 
                 Button(action: nextPage) {
-                    Text("Next")
+                    HStack {
+                        Text("Next")
+                        Image(systemName: "chevron.right")
+                    }
+                    .font(.subheadline)
                 }
-                .disabled(book.currentPage >= book.numPages) // Disable if on the last page
+                .disabled(currentPage >= book.numPages)
+                .buttonStyle(PlainButtonStyle())
+                .padding()
+                .background(currentPage < book.numPages ? Color.blue : Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+        .onChange(of: currentPage) {
+            book.updatePage(page: currentPage)
         }
     }
     
     private func previousPage() {
-        if book.currentPage > 1 {
-            updatedBook.currentPage -= 1
+        if currentPage > 1 {
+            currentPage -= 1
         }
     }
 
     private func nextPage() {
-        if book.currentPage < book.numPages {
-            updatedBook.currentPage += 1
+        if currentPage < book.numPages {
+            currentPage += 1
         }
+
     }
 }
