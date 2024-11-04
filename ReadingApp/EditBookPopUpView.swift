@@ -12,14 +12,14 @@ import SwiftData
 struct EditBookPopUpView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var books: [Book]
-    var book: Book
     
-    @State private var title: String
-    @State private var pubYear: String
-    @State private var numPages: String
-    @State private var price: String
-    @State private var authorName: String
-    @State private var authorSurname: String
+    @State var title: String
+    @State var pubYear: String
+    @State var numPages: String
+    @State var price: String
+    @State var authorName: String
+    @State var authorSurname: String
+    @State var bookIndex: Int
     
     @Binding var showingPopUp: Bool
 
@@ -38,7 +38,7 @@ struct EditBookPopUpView: View {
                     TextField("Author Surname", text: $authorSurname)
                 }
             }
-            .navigationTitle("Add Book")
+            .navigationTitle("Edit Book")
             .navigationBarItems(leading: Button("Cancel") {
                 showingPopUp = false
             }, trailing: Button("Save") {
@@ -50,24 +50,15 @@ struct EditBookPopUpView: View {
     }
     
     private var canSave: Bool {
-        return !title.isEmpty && !numPages.isEmpty && !authorName.isEmpty && !authorSurname.isEmpty
+        return !title.isEmpty && !pubYear.isEmpty && !numPages.isEmpty && !price.isEmpty && !authorName.isEmpty && !authorSurname.isEmpty
     }
     
     private func saveBook () {
         if let year = Int(pubYear), let pages = Int(numPages), let bookPrice = Double(price) {
             let newAuthor = Author(name: authorName, surname: authorSurname)
             let newBook = Book(title: title, pubYear: year, numPages: pages, price: bookPrice, author: newAuthor)
-            modelContext.insert(newBook)
-            do {
-                try modelContext.save()
-            } catch {
-                print("Error saving book: \(error.localizedDescription)")
-            }
-            showingPopUp = false
-        }
-        else if let pages = Int(numPages) {
-            let newAuthor = Author(name: authorName, surname: authorSurname)
-            let newBook = Book(title: title, pubYear: -1, numPages: pages, price: -1, author: newAuthor)
+            newBook.updatePage(page: books[bookIndex].getPage()	)
+            modelContext.delete(books[bookIndex])
             modelContext.insert(newBook)
             do {
                 try modelContext.save()

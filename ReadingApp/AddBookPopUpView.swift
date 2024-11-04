@@ -49,7 +49,7 @@ struct AddBookPopUpView: View {
     }
     
     private var canSave: Bool {
-        return !title.isEmpty && !numPages.isEmpty && !authorName.isEmpty && !authorSurname.isEmpty
+        return !title.isEmpty && !pubYear.isEmpty && !numPages.isEmpty && !price.isEmpty && !authorName.isEmpty && !authorSurname.isEmpty
     }
     
     private func saveBook () {
@@ -59,17 +59,6 @@ struct AddBookPopUpView: View {
             modelContext.insert(newBook)
             do {
                 try modelContext.save() 
-            } catch {
-                print("Error saving book: \(error.localizedDescription)")
-            }
-            showingPopUp = false
-        }
-        else if let pages = Int(numPages) {
-            let newAuthor = Author(name: authorName, surname: authorSurname)
-            let newBook = Book(title: title, pubYear: -1, numPages: pages, price: -1, author: newAuthor)
-            modelContext.insert(newBook)
-            do {
-                try modelContext.save()
             } catch {
                 print("Error saving book: \(error.localizedDescription)")
             }

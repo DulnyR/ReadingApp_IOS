@@ -26,6 +26,10 @@ final class Book: ObservableObject {
         self.author = author
     }
     
+    func getPage() -> Int {
+        return currentPage
+    }
+    
     func getStatus() -> Int {
         return currentPage < numPages ? Int((Double(currentPage - 1) * 100) / Double(numPages)) : 100
     }
