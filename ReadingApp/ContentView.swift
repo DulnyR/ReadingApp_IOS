@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var addBookPopUp = false
     @State private var editBookPopUp = false
     @State private var speedPopUp = false
-    @State private var readingSpeed: Double = 1.0
+    @State private var readingSpeed: Double = UserDefaults.standard.double(forKey: "readingSpeed") == 0 ? 1.0 : UserDefaults.standard.double(forKey: "readingSpeed")
     @State private var currentBookIndex: Int = 0
     @State private var selectedFilter: BookFilter = .all
     @State private var showingClearAlert = false
@@ -51,15 +51,13 @@ struct ContentView: View {
                .padding()
                 
                 HStack {
-                    Text("Total Books: \(books.count)")
+                    Text("Books:")
                         .padding(.leading)
                         
                     Spacer()
                     
-                    if(selectedFilter != .all){
-                        Text("Filtered Books: \(filteredBooks.count)")
-                            .padding(.trailing)		
-                    }
+                    Text("\(filteredBooks.count) / \(books.count)")
+                            .padding(.trailing)
                 }
                 
                 List {
@@ -183,6 +181,9 @@ struct ContentView: View {
                 VStack {
                     Text("Adjust Reading Speed")
                     Slider(value: $readingSpeed, in: 0.5...5.0, step: 0.5)
+                        .onChange(of: readingSpeed) {
+                        UserDefaults.standard.set(readingSpeed, forKey: "readingSpeed")
+                    }
                     Text("\(readingSpeed, specifier: "%.1f") pages per minute")
                         .padding()
                     Button("Done") {
@@ -191,6 +192,7 @@ struct ContentView: View {
                     .padding()
                 }
                 .padding()
+                .presentationDetents([.height(200)])
             }
         } detail: {
             Text("Select an item")

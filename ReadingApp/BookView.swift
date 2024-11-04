@@ -10,6 +10,8 @@ import SwiftUI
 struct BookView: View {
     @ObservedObject var book: Book
     @State var currentPage: Int
+    @State var viewInfoPopUp = false
+    @State var goToPagePopUp = false
     
     init(book: Book) {
         self.book = book
@@ -18,7 +20,6 @@ struct BookView: View {
     
     var body: some View {
         VStack {
-            
             Spacer()
             
             Text("This is page \(currentPage) of \(book.title) by \(book.author.name) \(book.author.surname).")
@@ -68,6 +69,59 @@ struct BookView: View {
         .onChange(of: currentPage) {
             book.updatePage(page: currentPage)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewInfoPopUp.toggle()
+                } label: {
+                    Text("View Info")
+                        .fontWeight(.bold)
+                }
+            }
+            ToolbarItem {
+                Button("Go To Page") {
+                    goToPagePopUp.toggle()	
+                }
+            }
+        }
+        .sheet(isPresented: $viewInfoPopUp) {
+            VStack {
+                Text("Book Information")
+                    .fontWeight(.bold)
+                VStack {
+                    Text("Title: \(book.title)")
+                        .multilineTextAlignment(.leading)
+                    Text("Publication Year: \(String(book.pubYear))")
+                        .multilineTextAlignment(.leading)
+                    Text("Price: \(String(format: "%.2f", book.price))")
+                        .multilineTextAlignment(.leading)
+                    Text("Author: \(book.author.name) \(book.author.surname)")
+                        .multilineTextAlignment(.leading)
+                }
+            }
+            .presentationDetents([.height(200)])
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $goToPagePopUp) {
+            VStack {
+                Text("Go To Page")
+                Slider(value: Binding(
+                    get: { Double(currentPage) },
+                    set: { newValue in
+                        currentPage = Int(newValue)
+                        book.updatePage(page: currentPage)
+                    }
+                ), in: 1...Double(book.numPages), step: 1)
+                Text("\(currentPage) / \(book.numPages)")
+                    .padding()
+                Button("Done") {
+                    goToPagePopUp = false
+                }
+                .padding()
+            }
+            .padding()
+            .presentationDetents([.height(300)])
+        }
     }
     
     private func previousPage() {
@@ -80,6 +134,5 @@ struct BookView: View {
         if currentPage < book.numPages {
             currentPage += 1
         }
-
     }
 }
