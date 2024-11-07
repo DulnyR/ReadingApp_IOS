@@ -20,6 +20,9 @@ struct EditBookPopUpView: View {
     @State var authorName: String
     @State var authorSurname: String
     @State var bookIndex: Int
+    @State var yearError = false
+    @State var generalError = false
+    @State var savingError = false
     
     @Binding var showingPopUp: Bool
 
@@ -30,13 +33,31 @@ struct EditBookPopUpView: View {
                     TextField("Title", text: $title)
                     TextField("Publication Year", text: $pubYear)
                         .keyboardType(.numberPad)
+                    if yearError {
+                        Text("Make sure the publication year is correct.")
+                            .foregroundStyle(.red)
+                    }
                     TextField("Number of Pages", text: $numPages)
                         .keyboardType(.numberPad)
                     TextField("Price", text: $price)
                         .keyboardType(.decimalPad)
                     TextField("Author Name", text: $authorName)
                     TextField("Author Surname", text: $authorSurname)
+                    if generalError {
+                        Text("Problem saving data. Please check publication year, number of pages and book price are correct.")
+                            .foregroundStyle(.red)
+                    }
                 }
+            }
+            .alert(isPresented: $savingError) {
+                Alert(
+                    title: Text("Error saving book."),
+                    message: Text("Please try again later."),
+                    primaryButton: .default(Text("Try Again")) {
+                        saveBook()
+                    },
+                    secondaryButton: .cancel()
+                )
             }
             .navigationTitle("Edit Book")
             .navigationBarItems(leading: Button("Cancel") {
@@ -55,20 +76,29 @@ struct EditBookPopUpView: View {
     
     private func saveBook () {
         if let year = Int(pubYear), let pages = Int(numPages), let bookPrice = Double(price) {
-            let newAuthor = Author(name: authorName, surname: authorSurname)
-            let newBook = Book(title: title, pubYear: year, numPages: pages, price: bookPrice, author: newAuthor)
-            newBook.updatePage(page: books[bookIndex].getPage()	)
-            modelContext.delete(books[bookIndex])
-            modelContext.insert(newBook)
-            do {
-                try modelContext.save()
-            } catch {
-                print("Error saving book: \(error.localizedDescription)")
+            generalError = false
+            if year > Calendar.current.component(.year, from: .now) {
+                yearError = true
             }
-            showingPopUp = false
+            else {
+                yearError = false
+                let newAuthor = Author(name: authorName, surname: authorSurname)
+                let newBook = Book(title: title, pubYear: year, numPages: pages, price: bookPrice, author: newAuthor)
+                newBook.updatePage(page: books[bookIndex].getPage()	)
+                modelContext.delete(books[bookIndex])
+                modelContext.insert(newBook)
+                do {
+                    try modelContext.save()
+                } catch {
+                    print("Error saving book: \(error.localizedDescription)")
+                }
+                if !savingError {
+                    showingPopUp = false
+                }
+            }
         }
         else {
-            //Show alert saying that the user hasn´t entered the info correctly
+            generalError = true
         }
     }
 }

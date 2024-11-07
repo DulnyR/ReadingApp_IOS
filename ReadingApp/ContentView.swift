@@ -51,13 +51,13 @@ struct ContentView: View {
                .padding()
                 
                 HStack {
-                    Text("Books:")
+                    Text("Books Visible:")
                         .padding(.leading)
-                        
+                    
                     Spacer()
                     
                     Text("\(filteredBooks.count) / \(books.count)")
-                            .padding(.trailing)
+                        .padding(.trailing)
                 }
                 
                 List {
@@ -112,6 +112,12 @@ struct ContentView: View {
                                     Text(book.getTimeLeft(readingSpeed: readingSpeed))
                                 }
                                 .padding()
+                                HStack {
+                                    Text("Slide to edit/delete >>")
+                                        .foregroundStyle(.gray)
+                                        .font(.footnote)
+                                    Spacer()
+                                }
                             }
                             .swipeActions (edge: .leading, allowsFullSwipe: false) {
                                 Button {
@@ -163,6 +169,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $addBookPopUp) {
                 AddBookPopUpView(showingPopUp: $addBookPopUp)
+                    .presentationDetents([.fraction(2/3)])
             }
             .sheet(isPresented: $editBookPopUp) {
                 let book = books[currentBookIndex]
@@ -176,6 +183,7 @@ struct ContentView: View {
                     bookIndex: currentBookIndex,
                     showingPopUp: $editBookPopUp
                 )
+                .presentationDetents([.fraction(2/3)])
             }
             .sheet(isPresented: $speedPopUp) {
                 VStack {
